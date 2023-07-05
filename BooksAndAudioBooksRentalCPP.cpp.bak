@@ -1,0 +1,185 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Ksiazka
+{
+public:
+    string autor;
+    string tytul;
+    bool dostepna;
+
+};
+
+class Audiobook : public Ksiazka
+{
+public:
+    string imieLektora;
+};
+
+    class Zbior : Audiobook
+    {
+    public:
+        vector<Ksiazka> ksiazkas;
+        vector<Audiobook> audiobooks;
+
+        void Dodaj()
+        {
+            cout << "\nChesz dodac ksiazke czy audiobooka?\n1 - Ksiazka, 2 - Audiobook\n" << endl;
+            string odp;
+            cin >> odp;
+
+            if (odp == "1")
+            {
+               cout<<"\nPodaj autora, a nastepnie tytul ksiazki"<<endl;
+               Ksiazka ksiazka;
+               cin >> ksiazka.autor;
+               cin >> ksiazka.tytul;
+               ksiazka.dostepna=true;
+               ksiazkas.push_back(ksiazka);
+            }
+
+            else if (odp == "2")
+            {
+                cout<<"\nPodaj autora, tytul audiobooka i lektora"<<endl;
+                Audiobook audiobook;
+                cin >> audiobook.autor;
+                cin >> audiobook.tytul;
+                cin >> audiobook.imieLektora;
+                audiobook.dostepna = true;
+                audiobooks.push_back(audiobook);
+            }
+
+            else
+            {
+                Dodaj();
+            }
+
+        }
+
+        void Wyswietl()
+        {
+            cout << endl;
+            for (int i=0; i<ksiazkas.size();i++)
+            {
+                if (ksiazkas[i].dostepna == true)
+                {
+                    cout<<"Dostepna jest ksiazka: "<< ksiazkas[i].tytul << endl;
+                }
+            }
+
+
+            for (int i = 0; i < audiobooks.size(); i++)
+            {
+                if (audiobooks[i].dostepna == true)
+                {
+                    cout<<"Dostepny jest audiobook: "<< audiobooks[i].tytul<<endl;
+                }
+            }
+
+        }
+
+        void WypozyczKsiazke()
+        {
+            int odp;
+            cout << "\nKtora ksiazke chcialbys wypozyczyc?\nDostepne ksiazki to:" << endl;
+            vector<Ksiazka> Dostepne;
+            for (int i = 0; i < ksiazkas.size(); i++)
+            {
+                if (ksiazkas[i].dostepna == true)
+                {
+                    cout<<i+1<<". "<<ksiazkas[i].tytul<<endl;
+                    Dostepne.push_back(ksiazkas[i]);
+                }
+            }
+            if (Dostepne.size() == 0)
+            {
+                cout << "Brak ksiazek mozliwych do wypozyczenia." << endl;
+            }
+            else
+            {
+                cin >> odp;
+                Znajdz(Dostepne[odp - 1].tytul, false);
+                cout << "\nDziekujemy za wypozyczenie ksiazki " << Dostepne[odp - 1].tytul << endl;
+            }            
+        }
+
+        void OddajKsiazke()
+        {
+            int odp;
+            cout<<"\nKtora ksiazke chcialbys oddac?"<<endl;
+            vector<Ksiazka> Niedostepne;
+            for (int i = 0; i < ksiazkas.size(); i++)
+            {
+                if (ksiazkas[i].dostepna == false)
+                {
+                    cout << i+1 << ". " << ksiazkas[i].tytul << endl;
+                    Niedostepne.push_back(ksiazkas[i]);
+                }
+            }
+            if (Niedostepne.size() == 0)
+            {
+                cout << "Brak ksiazek do oddania." << endl;
+            }
+            else
+            {
+                cin >> odp;
+                Znajdz(Niedostepne[odp - 1].tytul, true);
+                cout << "\nDziekujemy za oddanie ksiazki " << Niedostepne[odp - 1].tytul << endl;
+            }            
+
+        }
+
+        void Znajdz(string pom, bool p)
+        {
+            for (int i = 0; i < ksiazkas.size(); i++)
+            {
+                if (ksiazkas[i].tytul == pom)
+                {
+                    ksiazkas[i].dostepna = p;
+                    break;
+                }
+            }
+        }
+
+    };
+
+
+
+int main()
+{
+    cout<<"Witaj w aplikacji!"<<endl;
+    Zbior z1;
+            do
+            {
+                cout<<"\nWybierz co chcesz zrobic"<<endl;
+
+                cout<<"1. Dodaj ksiazke lub audiobooka\n2. Wyswietl dostepne ksiazki i audiobooki\n3. Wypozycz ksiazke\n4. Oddaj ksiazke\n5. Wyjdz\n\n";
+                int odp;
+                cin >> odp;
+
+                switch (odp)
+                {
+                case 1:
+                    z1.Dodaj();
+                    break;
+                case 2:
+                    z1.Wyswietl();
+                    break;
+                case 3:
+                    z1.WypozyczKsiazke();
+                    break;
+                case 4:
+                    z1.OddajKsiazke();
+                    break;
+                case 5:
+                    exit(0);
+                    break;
+                default:
+                    break;
+                }
+
+            } while (true);
+
+        }
